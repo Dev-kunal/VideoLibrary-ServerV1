@@ -11,7 +11,7 @@ app.use(
     extended: true,
   })
 );
-app.use(bodyParser.json());
+app.use(express.json());
 const { initializeDBConnection } = require("./db/db.connect");
 initializeDBConnection();
 
@@ -42,6 +42,6 @@ app.get((req, res) => {
   res.status(404).json({ message: "Route not Found" });
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log("Server Started");
 });

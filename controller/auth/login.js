@@ -7,12 +7,12 @@ const login = async (req, res) => {
     let { username, password } = req.body;
     let user = await User.findOne({ username });
     if (!user) {
-      res.json({ success: false, message: "User does not exist" });
+      res.status(409).json({ success: false, message: "User does not exist" });
       return;
     }
     const match = await bcrypt.compareSync(password, user.password);
     if (!match) {
-      res.json({ success: false, message: "Incorrect Password" });
+      res.status(409).json({ success: false, message: "Incorrect Password" });
       return;
     }
     user = await user.save();
@@ -27,7 +27,7 @@ const login = async (req, res) => {
     res.status(200).json({ success: true, user, token });
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

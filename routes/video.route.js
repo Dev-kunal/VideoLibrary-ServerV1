@@ -15,11 +15,11 @@ router.param("videoId", async (req, res, next, videoId) => {
     req.video = video;
     next();
   } catch (err) {
-    res.json(400).json({ success: false, message: err.message });
+    res.json(500).json({ success: false, message: err.message });
   }
 });
 
-router.route("/liked").get(async (req, res) => {
+router.get("/liked", async (req, res) => {
   try {
     let userId = req.user.userId;
     const likedVideos = await Liked.find({ userId: userId })
@@ -31,7 +31,7 @@ router.route("/liked").get(async (req, res) => {
   }
 });
 
-router.route("/:videoId").get(async (req, res) => {
+router.get("/:videoId", async (req, res) => {
   try {
     let { video } = req;
     let userId = req.user.userId;
@@ -41,17 +41,16 @@ router.route("/:videoId").get(async (req, res) => {
     };
     const likeStatus = await Liked.findOne(filter);
     if (likeStatus) {
-      res.json({ success: true, video: video, isLiked: true });
+      res.status(200).json({ success: true, video: video, isLiked: true });
     } else {
-      res.json({ success: true, video: video, isLiked: false });
+      res.status(200).json({ success: true, video: video, isLiked: false });
     }
   } catch (err) {
     res.json({ sucess: false, message: err.message });
   }
 });
 
-// auth
-router.route("/likeunlike").post(async (req, res) => {
+router.post("/likeunlike", async (req, res) => {
   try {
     let { videoId } = req.body;
     const filter = {
@@ -65,10 +64,10 @@ router.route("/likeunlike").post(async (req, res) => {
       const newVideo = { userId: req.user.userId, videoId };
       const NewItem = new Liked(newVideo);
       const likedVideo = await NewItem.save();
-      res.json({ success: true, liked: true });
+      res.status(200).json({ success: true, liked: true });
     } else {
       const unlikedVideo = await Liked.findOneAndDelete(filter);
-      res.json({ success: true, liked: false });
+      res.status(200).json({ success: true, liked: false });
     }
   } catch (err) {
     res.json({ sucess: false, message: err.message });

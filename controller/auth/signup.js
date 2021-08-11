@@ -6,7 +6,7 @@ const signup = async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      res.json({
+      res.status(409).json({
         success: false,
         message: "A user is already registered with this Email",
       });
@@ -14,7 +14,9 @@ const signup = async (req, res) => {
     }
     user = await User.findOne({ username });
     if (user) {
-      res.json({ success: false, message: "Username is already taken" });
+      res
+        .status(409)
+        .json({ success: false, message: "Username is already taken" });
       return;
     }
     const salt = bcrypt.genSaltSync(10);
