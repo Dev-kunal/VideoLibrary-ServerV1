@@ -16,6 +16,12 @@ const playlistRouter = require("./routes/playlist.route.js");
 const authVerify = require("./middleware/authVerify");
 const routeHandler = require("./middleware/routeHandler");
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use("/user", userRouter);
 app.use("/videos", authVerify, videoRouter);
 app.use("/playlist", authVerify, playlistRouter);
